@@ -1,0 +1,9 @@
+{
+    "project": {
+        "appname": "angular-blog",
+        "options": {
+            "css": "stylus",
+            "html": "jade"
+        }
+    }
+}
