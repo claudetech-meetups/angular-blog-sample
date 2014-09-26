@@ -1,5 +1,6 @@
 angular.module('BlogApp', [
-  'ui.router'
+  'ui.router',
+  'ngResource'
 ]);
 
 angular.module('BlogApp').config([
@@ -9,12 +10,26 @@ angular.module('BlogApp').config([
     $stateProvider
       .state('index', {
         url: '/',
-        templateUrl: 'post_index.html',
+        templateUrl: 'posts/index.html',
         controller: 'PostIndexCtrl'
+      })
+      .state('new', {
+        url: '/posts/new',
+        templateUrl: 'posts/new.html',
+        controller: 'PostNewCtrl',
+        resolve: {
+          categories: ['$q', 'Category', function ($q, Category) {
+            var deferred = $q.defer();
+            Category.query(function (categories) {
+              deferred.resolve(categories);
+            });
+            return deferred.promise;
+          }]
+        }
       })
       .state('show', {
         url: '/posts/:id',
-        templateUrl: 'post_show.html',
+        templateUrl: 'posts/show.html',
         controller: 'PostShowCtrl'
       });
   }

@@ -1,9 +1,7 @@
 angular.module('BlogApp').controller('PostShowCtrl', [
-  '$scope', function ($scope) {
-    $scope.post = {
-      title: "Post title",
-      content: "Post content",
-      date: new Date()
-    };
+  '$scope', '$stateParams', 'Post', function ($scope, $stateParams, Post) {
+    Post.get({id: $stateParams.id}, function (post) {
+      $scope.post = post;
+    });
   }
 ]);

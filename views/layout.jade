@@ -26,6 +26,9 @@ html
     script(src="js/app.js")
     script(src="js/controllers/posts/index.js")
     script(src="js/controllers/posts/show.js")
+    script(src="js/controllers/posts/new.js")
+    script(src="js/resources/post.js")
+    script(src="js/resources/category.js")
   body(ng-app="BlogApp")
     .container
       nav.navbar.navbar-default
@@ -41,4 +44,4 @@ html
               li: a.small(href="#") Plenty of categories
           h3 Admin
             ul.list-unstyled
-              li: a.small(href="#") Add post
+              li: a.small(ui-sref="new") Add post
