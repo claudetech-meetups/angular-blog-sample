@@ -1,5 +1,5 @@
 angular.module('BlogApp').factory('Post', [
   '$resource', function ($resource) {
-    return $resource('http://localhost:3000/posts/:id');
+    return $resource('http://angular-tutorial-api.herokuapp.com/posts/:id');
   }
 ]);

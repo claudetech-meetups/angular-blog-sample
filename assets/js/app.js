@@ -9,7 +9,7 @@ angular.module('BlogApp').config([
 
     $stateProvider
       .state('index', {
-        url: '/',
+        url: '/?category',
         templateUrl: 'posts/index.html',
         controller: 'PostIndexCtrl'
       })

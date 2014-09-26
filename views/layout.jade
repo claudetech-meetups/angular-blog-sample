@@ -28,6 +28,7 @@ html
     script(src="js/controllers/posts/index.js")
     script(src="js/controllers/posts/show.js")
     script(src="js/controllers/posts/new.js")
+    script(src="js/controllers/categories/index.js")
     script(src="js/resources/post.js")
     script(src="js/resources/category.js")
     script(src="js/filters/markdown.js")
@@ -41,9 +42,8 @@ html
         .col-xs-8
           block content
         .col-xs-4
-          h3 Categories
-            ul.list-unstyled
-              li: a.small(href="#") Plenty of categories
-          h3 Admin
-            ul.list-unstyled
-              li: a.small(ui-sref="new") Add post
+          include ./categories/index
+          .block.admin
+            h3 Admin
+              ul.list-unstyled
+                li: a.small(ui-sref="new") Add post

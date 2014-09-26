@@ -1,6 +1,7 @@
 angular.module('BlogApp').controller('PostIndexCtrl', [
-  '$scope', 'Post', function ($scope, Post) {
-    Post.query(function (posts) {
+  '$scope', '$stateParams', 'Post', function ($scope, $stateParams, Post) {
+    var search = $stateParams.category ? {category_id: $stateParams.category} : {};
+    Post.query(search, function (posts) {
       $scope.posts = posts;
     });
   }

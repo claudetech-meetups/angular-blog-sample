@@ -1,0 +1,5 @@
+.block.categories(ng-controller="CategoryIndexCtrl")
+  h3 Categories
+  ul.list-unstyled
+    li(ng-repeat="category in categories")
+      a.small(ui-sref="index({category: category.id})" ng-bind="category.name")
