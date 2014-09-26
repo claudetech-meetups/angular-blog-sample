@@ -1,0 +1,11 @@
+.posts(ng-controller="PostIndexCtrl")
+  .post.row(ng-repeat="post in posts")
+    .row
+      .col-xs-12
+        h2(ng-bind="post.title")
+        small.date(ng-bind="post.date|date:'y/M/d'")
+    .row.content
+      .col-xs-12(ng-bind="post.content|limitTo:100")
+    .row
+      .col-xs-12
+        a.small(href="#") See more
