@@ -1,10 +1,11 @@
 {
-  "project": {
-    "appname": "angular-blog",
-    "options": {
-      "css": "stylus",
-      "html": "jade"
-    }
-  },
-  "herokuAppName": "angular-blog-sample"
+    "project": {
+        "appname": "angular-blog",
+        "options": {
+            "css": "stylus",
+            "html": "jade"
+        }
+    },
+    "herokuAppName": "angular-blog-sample",
+    "leaves": "0.23.3"
 }
