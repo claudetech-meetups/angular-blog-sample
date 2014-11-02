@@ -1,9 +1,7 @@
-livereloadPort = 35729
-httpServerPort = 9000
-
 fs         = require 'fs'
 path       = require 'path'
 loremIpsum = require 'lorem-ipsum'
+dummyImage = require 'dummy-image'
 _          = require 'lodash'
 
 extraConfigFile = '.leavesrc'
@@ -17,6 +15,9 @@ defaults =
     outdir: 'css'
   js:
     outdir: 'js'
+  ports:
+    http: 9000
+    livereload: 35729
 
 extraConfig = defaults
 if fs.existsSync extraConfigFile
@@ -25,6 +26,17 @@ extraConfig.dev = _.merge {}, _.omit(extraConfig, 'dev', 'dist'), extraConfig.de
 extraConfig.dist = _.merge {}, _.omit(extraConfig, 'dev', 'dist'), extraConfig.dist
 
 capitalize = (s) -> s[0].toUpperCase() + s.substring(1)
+
+dumimg = (dist, dir) ->
+  (options) ->
+    if _.isNumber(options) || _.isString(options)
+      [width, height, type, replace] = arguments
+      options = {width: width, height: height, type: type, replace: replace}
+    return options.replace if options.replace? && dist
+    baseDir = path.join(__dirname, dir)
+    options.outputDir = path.join(baseDir, 'img')
+    imgPath = dummyImage(options)
+    path.relative(baseDir, imgPath)
 
 lorem = (count, options={}) ->
   if typeof count == 'number'
@@ -68,7 +80,7 @@ coffeeDevFiles = [_.extend({}, coffeeFiles[0], {dest: path.join('dist', extraCon
 htmlFiles = [
   expand: true
   cwd: 'tmp'
-  src: ["**/*#{extraConfig.html.ext}", "!**/_*#{extraConfig.html.ext}"]
+  src: ["**/*#{extraConfig.html.ext}", "!**/_*#{extraConfig.html.ext}", "!components/**"]
   dest: 'tmp'
   ext: extraConfig.dev.html.ext
 ]
@@ -147,13 +159,16 @@ module.exports = (grunt) ->
           event: ['added', 'deleted']
       views:
         cwd: 'views'
-        files: 'views/**/*.jade'
+        files: ['views/**/*.jade', 'views/**/*.html']
         tasks: ['runViews:tmp:true']
       locales:
         files: "#{i18nOptions.options.localesPath}/**/*.#{i18nOptions.options.fileFormat}"
         tasks: ['runViews:tmp:true']
-      options:
-        livereload: livereloadPort
+      livereload:
+        files: ['tmp/**/*']
+        options:
+          livereload:
+            port: extraConfig.ports.livereload
 
     coffee:
       tmp:
@@ -189,26 +204,33 @@ module.exports = (grunt) ->
         files: templateDevFiles
         options:
           pretty: true
+          data:
+            lorem: lorem
+            dev: true
+            dumimg: dumimg(false, 'dist')
       dist:
         files: templateDistFiles
         options:
           data:
+            lorem: lorem
             dev: false
+            dumimg: dumimg(true, 'dist')
       options:
         data:
           lorem: lorem
           dev: true
+          dumimg: dumimg(false, 'tmp')
 
     connect:
       server:
         options:
-          port: httpServerPort
+          port: extraConfig.ports.http
           keepalive: true
           debug: true
           base: 'tmp'
           useAvailablePort: true
           open: true
-          livereload: true
+          livereload: extraConfig.ports.livereload
 
     copy:
       tmpAssets:
@@ -369,5 +391,5 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'default', ['compile:tmp', 'concurrent:start']
 
-  if fs.existsSync('grunt.overrides.coffee') || fs.existsSync('grunt.overrides.js')
-    require('./grunt.overrides')(grunt, extraConfig)
+  if fs.existsSync('grunt.hooks.coffee') || fs.existsSync('grunt.hooks.js')
+    require('./grunt.hooks')(grunt, extraConfig)
